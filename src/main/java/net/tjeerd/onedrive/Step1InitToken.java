@@ -1,15 +1,21 @@
 package net.tjeerd.onedrive;
 
 import net.tjeerd.onedrive.core.OneDrive;
-import net.tjeerd.onedrive.core.Principal;
+import net.tjeerd.onedrive.core.WebAppPrincipal;
+import net.tjeerd.onedrive.enums.FriendlyNamesEnum;
+import net.tjeerd.onedrive.json.folder.Data;
+import net.tjeerd.onedrive.json.folder.Folder;
+
+import java.io.File;
+import java.util.List;
 
 
 public class Step1InitToken {
     private static OneDrive oneDriveAPI;
     private static boolean DEBUG = true;
-    private static String CLIENT_ID = "01234567890"; // see OneDrive Development Dashboard
-    private static String CLIENT_SECRET = "ABCDEFGHIJklmnopqrstuvwxyz123"; // see OneDrive Development Dashboard
-    private static String AUTHORIZATION_CODE = "abcdefg-12345-hijklmn-67890-opqrstvwxyz"; // see description below
+    private static String CLIENT_ID = "cc88468d-b10a-4d85-99d8-a52b3d1cc0fc"; // see OneDrive Development Dashboard
+    private static String CLIENT_SECRET = "80sApMtSMrz2VeAYEaGxLct"; // see OneDrive Development Dashboard
+    private static String AUTHORIZATION_CODE = "Mcf4ff2a3-397b-ca9d-c43a-8e665d88cfab"; // see description below
 
     /**
      * This program requires the following values which are defined at the top of the class:
@@ -35,11 +41,26 @@ public class Step1InitToken {
      * @throws Exception
      */
     public static void main(String args[]) throws Exception {
-        Principal principal = new Principal(CLIENT_ID, CLIENT_SECRET, AUTHORIZATION_CODE);
+        WebAppPrincipal principal = new WebAppPrincipal(CLIENT_ID, CLIENT_SECRET, AUTHORIZATION_CODE, "https://www.gonitro.com/NitroProOAuth2Callback");
+        principal.setRefreshToken("MCVOh51VP5wXttJM6D2!0ZWO1c5X4vX5UEhAVG*U!BsQ5QnexfqC3chhQVqeJrWmV!E1a5RYcoVqkZYGAaD6BLRJy5ggG7ylomWQ9z0pWNvB29qD59YuFGQLTxj8PrMfsTSKbmqxqImmNAD*spy5zTMwWtuGzHPWDVtgnXuyBSkANPRFO8gMrDRXTATP0gvmMjm4VPwAeEl7EHN3X7uqiiUWzlFenez8igk4ooi7iPbkl7DPOsD5hISrOwHH94ouUpZf58x2DZfCz3tsvzBORo3xeu4Al!FtkhJfVACrUFY1gtXuDdZvO06RP*t5NqQYGwaDXxnaDlnO2zRz!BTJAVq0gPL50rRzxrtG5qMfkUOh2dSkfOKV6Oq611!0ctUntm7IN8GnyOg5le5niPnleQps$");
 
         oneDriveAPI = new OneDrive(principal, DEBUG);
-        oneDriveAPI.initTokenByPrincipal();
+        oneDriveAPI.initToken();
+
 
         System.out.println("Refresh token: " + principal.getoAuth20Token().getRefresh_token());
+
+        Folder flds = oneDriveAPI.getMyFilesList(FriendlyNamesEnum.ALL);
+        boolean b = oneDriveAPI.initAccessTokenByRefreshTokenAndClientId();
+        Folder flds2 = oneDriveAPI.getMyFilesList(FriendlyNamesEnum.ALL);
+
+        Folder f = oneDriveAPI.createFolder("TestB", "", flds.getId());
+        oneDriveAPI.uploadFile(new File("./README.md"), f.getId());
+
+        List<Data> list = oneDriveAPI.getFileList(f.getId());
+
+        int iii = 0;
+//        flds.
+//        oneDriveAPI.getFileList(flds.getId());
     }
 }

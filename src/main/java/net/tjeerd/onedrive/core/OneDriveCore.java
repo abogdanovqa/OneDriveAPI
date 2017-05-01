@@ -26,6 +26,8 @@ public class OneDriveCore {
     public static final String API_PARAM_REDIRECT_URI  = "redirect_uri";
     public static final String API_PARAM_GRANT_TYPE    = "grant_type";
     public static final String API_PARAM_REFRESH_TOKEN = "refresh_token";
+    public static final String API_PARAM_ACCESS_SCOPE  = "scope";
+    public static final String API_PARAM_RESPONSE_TYPE = "response_type";
 
     private Client client;
     private Principal principal;
@@ -168,15 +170,19 @@ public class OneDriveCore {
         ObjectMapper objectMapper = new ObjectMapper();
 
         WebResource webResource = client.resource(OneDriveEnum.OAUTH20_TOKEN_URL.toString());
+
         MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 
         queryParams.add(API_PARAM_CLIENT_ID, principal.getClientId());
         queryParams.add(API_PARAM_CLIENT_SECRET, principal.getClientSecret());
         queryParams.add(API_PARAM_CODE, principal.getAuthorizationCode());
-        queryParams.add(API_PARAM_REDIRECT_URI, OneDriveEnum.OAUTH20_DESKTOP_REDIRECT_URL.toString());
+        queryParams.add(API_PARAM_REDIRECT_URI, principal.getRedirectUrl());
         queryParams.add(API_PARAM_GRANT_TYPE, OneDriveEnum.GRANT_TYPE_AUTHORIZATION_CODE.toString());
 
-        ClientResponse clientResponse = webResource.queryParams(queryParams).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+        ClientResponse clientResponse = webResource
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class, queryParams);
 
         try {
             oAuth20Token = objectMapper.readValue(clientResponse.getEntity(String.class).toString(), OAuth20Token.class);
@@ -203,7 +209,8 @@ public class OneDriveCore {
         OAuth20Token oAuth20Token = new OAuth20Token();
 
         queryParams.add(API_PARAM_CLIENT_ID, principal.getClientId());
-        queryParams.add(API_PARAM_REDIRECT_URI, OneDriveEnum.OAUTH20_DESKTOP_REDIRECT_URL.toString());
+        queryParams.add(API_PARAM_CLIENT_SECRET, principal.getClientSecret());
+        queryParams.add(API_PARAM_REDIRECT_URI, principal.getRedirectUrl());
         queryParams.add(API_PARAM_REFRESH_TOKEN, principal.getoAuth20Token().getRefresh_token());
         queryParams.add(API_PARAM_GRANT_TYPE, OneDriveEnum.GRANT_TYPE_REFRESH_TOKEN.toString());
 

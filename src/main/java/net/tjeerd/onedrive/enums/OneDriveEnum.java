@@ -6,7 +6,8 @@ public enum OneDriveEnum {
     OAUTH20_DESKTOP_REDIRECT_URL("https://login.live.com/oauth20_desktop.srf"),
     API_URL("https://apis.live.net/v5.0/"),
     GRANT_TYPE_AUTHORIZATION_CODE("authorization_code"),
-    GRANT_TYPE_REFRESH_TOKEN("refresh_token");
+    GRANT_TYPE_REFRESH_TOKEN("refresh_token"),
+    AUTHORIZATION_RESPONSE("code");
 
     private String value;
     

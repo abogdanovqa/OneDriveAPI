@@ -7,6 +7,7 @@ public class OAuth20Token extends Error {
     private String scope;
     private String token_type;
     private String user_id;
+    private String id_token;
 
     public String getAccess_token(){
         return this.access_token;
@@ -43,6 +44,10 @@ public class OAuth20Token extends Error {
     }
     public void setUser_id(String user_id){
         this.user_id = user_id;
+    }
+
+    public String getId_token() {
+        return id_token;
     }
 }
 

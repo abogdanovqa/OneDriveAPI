@@ -1,5 +1,7 @@
 package net.tjeerd.onedrive.json.folder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class Data  {
     private String     type;
     private String     updated_time;
     private String     upload_location;
+    private String     error;
     
     // Fileds for music files
     private String	title;
@@ -370,5 +373,40 @@ public class Data  {
 		this.bitrate = bitrate;
 	}
 
+    public String getError() {
+        return error;
+    }
 
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    private <T extends Data> T convertTo(Class<T> clazz) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String json = objectMapper.writerWithType(Data.class).writeValueAsString(this);
+            T f = objectMapper.readValue(json, clazz);
+            return f;
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
+
+    public Data convertToCorrespondingType() {
+        if (isFile()) {
+            return convertTo(net.tjeerd.onedrive.json.folder.File.class);
+        } else if (isFolder()) {
+            return convertTo(Folder.class);
+        } else {
+            throw new IllegalStateException(type + "is unexpected type of the object");
+        }
+    }
+
+    public boolean isFile() {
+        return type.equals("file");
+    }
+
+    public boolean isFolder() {
+        return type.equals("folder");
+    }
 }

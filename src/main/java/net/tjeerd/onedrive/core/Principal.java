@@ -1,21 +1,24 @@
 package net.tjeerd.onedrive.core;
 
+import net.tjeerd.onedrive.enums.OneDriveEnum;
 import net.tjeerd.onedrive.json.OAuth20Token;
 
-public class Principal {
-    private String clientId;
-    private String clientSecret;
-    private String authorizationCode;
-    private OAuth20Token oAuth20Token;
+public abstract class Principal {
+    protected String clientId;
+    protected  String clientSecret;
+    protected String authorizationCode;
+    protected OAuth20Token oAuth20Token;
+    protected String redirectUrl = OneDriveEnum.OAUTH20_DESKTOP_REDIRECT_URL.toString();
 
-    public Principal(String clientId, String clientSecret, String authorizationCode) {
+
+    protected Principal(String clientId, String clientSecret, String authorizationCode) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.authorizationCode = authorizationCode;
         this.oAuth20Token = new OAuth20Token();
     }
 
-    public Principal(String clientId, String clientSecret, String authorizationCode, String refreshToken) {
+    protected Principal(String clientId, String clientSecret, String authorizationCode, String refreshToken) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.authorizationCode = authorizationCode;
@@ -55,4 +58,10 @@ public class Principal {
     public void setoAuth20Token(OAuth20Token oAuth20Token) {
         this.oAuth20Token = oAuth20Token;
     }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public abstract boolean isValid();
 }

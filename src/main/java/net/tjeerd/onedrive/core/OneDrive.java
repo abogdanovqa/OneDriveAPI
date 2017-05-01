@@ -14,6 +14,8 @@ import net.tjeerd.onedrive.exception.RestException;
 import net.tjeerd.onedrive.json.Quota;
 import net.tjeerd.onedrive.json.SharedLink;
 import net.tjeerd.onedrive.json.User;
+import net.tjeerd.onedrive.json.folder.Data;
+import net.tjeerd.onedrive.json.folder.DataList;
 import net.tjeerd.onedrive.json.folder.Folder;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
@@ -26,6 +28,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OneDrive implements OneDriveAPI {
     private static final Logger logger = LoggerFactory.getLogger(OneDrive.class);
@@ -77,17 +81,29 @@ public class OneDrive implements OneDriveAPI {
     }
 
 
+    public boolean initToken() {
+        if (principal != null && principal.getoAuth20Token() != null
+                && principal.getoAuth20Token().getRefresh_token() != null
+                && !principal.getoAuth20Token().getRefresh_token().equals("")) {
+            //try to use refresh token
+
+            return initAccessTokenByRefreshTokenAndClientId();
+        } else if(principal.isValid()) {
+            return initTokenByPrincipal();
+        }
+        return false;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean initTokenByPrincipal() {
-        if (hasPrincipalClientSecretAndClientIdAndAuthorizationCode()) {
-            logger.info("Client-id, client secret and authorization code found, trying to initialize tokens");
+        if (principal.isValid()) {
             this.principal.setoAuth20Token(oneDriveCore.getTokenByPrincipal());
             return true;
         } else {
-            logger.error("Cannot initialize tokens, missing client-id, client secret or authorization code");
+            logger.error("Cannot initialize tokens, the principal object is invalid. Some required properties are missed.");
             return false;
         }
     }
@@ -181,8 +197,13 @@ public class OneDrive implements OneDriveAPI {
      * {@inheritDoc}
      */
     @Override
-    public Folder getFileList(String folderId) throws Exception {
-        return (Folder) oneDriveCore.doGetAPI(new MultivaluedMapImpl(), MediaType.APPLICATION_JSON, folderId + "/" + API_PATH_FILES, new Folder());
+    public List<Data> getFileList(String folderId) throws Exception {
+        DataList dataList = (DataList) oneDriveCore.doGetAPI(new MultivaluedMapImpl(), MediaType.APPLICATION_JSON, folderId + "/" + API_PATH_FILES, new DataList());
+        List<Data> list = new ArrayList<>();
+        for (Data d : dataList.getData()) {
+            list.add(d.convertToCorrespondingType());
+        }
+        return list;
     }
 
 

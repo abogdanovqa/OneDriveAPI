@@ -1,7 +1,9 @@
 package net.tjeerd.onedrive;
 
+import net.tjeerd.onedrive.core.MobileAppPrincipal;
 import net.tjeerd.onedrive.core.OneDrive;
 import net.tjeerd.onedrive.core.Principal;
+import net.tjeerd.onedrive.core.WebAppPrincipal;
 import net.tjeerd.onedrive.enums.FriendlyNamesEnum;
 import net.tjeerd.onedrive.json.User;
 import net.tjeerd.onedrive.json.folder.Data;
@@ -17,6 +19,10 @@ import java.util.Properties;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Be sure thatall properties (onedrive.properties) are defined in the test resources folder.
+ * redirecturl is mandatory only if you use Web App.
+ */
 public class OneDriveTest {
     private static final String ONEDRIVE_PROPERTIESFILE = "onedrive.properties";
     private static final String ONEDRIVE_TESTFILE = "onedrivetestfile.docx";
@@ -34,12 +40,22 @@ public class OneDriveTest {
             throw new FileNotFoundException("OneDriveAPI properties file '" + ONEDRIVE_PROPERTIESFILE+ "' not found in the classpath");
         }
 
-        principal = new Principal(properties.getProperty("clientid"), properties.getProperty("clientsecret"),
-                                  properties.getProperty("authorizationcode"), properties.getProperty("refreshtoken"));
 
-        oneDriveAPI = new OneDrive(principal,true);
-        oneDriveAPI.initAccessTokenByRefreshTokenAndClientId();
+        String clientId = properties.getProperty("clientid");
+        String clientSecret = properties.getProperty("clientsecret");
+        String authorizationCode = properties.getProperty("authorizationcode");
+        String redirectUrl = properties.getProperty("redirecturl");
+
+        if (redirectUrl.equals("")) {
+            principal = new MobileAppPrincipal(clientId, clientSecret, authorizationCode);
+        } else {
+            principal = new WebAppPrincipal(clientId, clientSecret, authorizationCode, redirectUrl);
+        }
+
+        oneDriveAPI = new OneDrive(principal, true);
+        oneDriveAPI.initTokenByPrincipal();
     }
+
 
     @Test
     public void getMyFilesListTest() throws Exception {

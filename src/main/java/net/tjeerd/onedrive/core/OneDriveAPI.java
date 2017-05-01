@@ -6,10 +6,12 @@ import net.tjeerd.onedrive.exception.RestException;
 import net.tjeerd.onedrive.json.Quota;
 import net.tjeerd.onedrive.json.SharedLink;
 import net.tjeerd.onedrive.json.User;
+import net.tjeerd.onedrive.json.folder.Data;
 import net.tjeerd.onedrive.json.folder.Folder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public interface OneDriveAPI {
     /**
@@ -71,7 +73,7 @@ public interface OneDriveAPI {
      * @return list of files in the specified folder
      * @throws Exception
      */
-    Folder getFileList(String folderId) throws Exception;
+    List<Data> getFileList(String folderId) throws Exception;
 
     /**
      * Download a OneDriveAPI file and store the file in the destination file path.

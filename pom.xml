@@ -4,7 +4,7 @@
 
   <groupId>OneDriveAPI</groupId>
   <artifactId>OneDriveAPI</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>nitro-edition-1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>net</name>
