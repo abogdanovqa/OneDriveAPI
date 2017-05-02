@@ -50,11 +50,12 @@ public class Step1InitToken {
 
         System.out.println("Refresh token: " + principal.getoAuth20Token().getRefresh_token());
 
-        Folder flds = oneDriveAPI.getMyFilesList(FriendlyNamesEnum.ALL);
-        boolean b = oneDriveAPI.initAccessTokenByRefreshTokenAndClientId();
-        Folder flds2 = oneDriveAPI.getMyFilesList(FriendlyNamesEnum.ALL);
+        Data d = oneDriveAPI.getMyFilesList(FriendlyNamesEnum.ALL).getData().get(0);
+//        boolean b = oneDriveAPI.initAccessTokenByRefreshTokenAndClientId();
+//        Folder flds2 = oneDriveAPI.getMyFilesList(FriendlyNamesEnum.ALL);
 
-        Folder f = oneDriveAPI.createFolder("TestB", "", flds.getId());
+        Folder f = oneDriveAPI.createFolder("TestA", "", d.getParent_id());
+        oneDriveAPI.createFolder("TestABC", "", f.getId());
         oneDriveAPI.uploadFile(new File("./README.md"), f.getId());
 
         List<Data> list = oneDriveAPI.getFileList(f.getId());
@@ -62,5 +63,33 @@ public class Step1InitToken {
         int iii = 0;
 //        flds.
 //        oneDriveAPI.getFileList(flds.getId());
+    }
+
+    /**
+     * Generate a refresh token. You need to get authorization code before
+     *
+     * To get authorization code
+     *
+     * 1. Open in browser
+     * "https://login.live.com/oauth20_authorize.srf?client_id=" + clientId + "&scope=wl.signin%20wl.basic%20wl.offline_access%20wl.skydrive_update&response_type=code&redirect_uri=" + redirectUrl
+     *
+     *2. Signin
+     *
+     *3. When you redirected to your "redirectUrl" copy the code from the address bar
+     *
+     *
+     * @param clientId
+     * @param clientSecret
+     * @param authorization
+     * @param redirectUrl
+     * @return
+     */
+    public static String generateRefreshToken(String clientId, String clientSecret, String authorization, String redirectUrl) {
+        WebAppPrincipal principal = new WebAppPrincipal(clientId, clientSecret, authorization, redirectUrl);
+
+        oneDriveAPI = new OneDrive(principal, DEBUG);
+        oneDriveAPI.initToken();
+
+        return principal.getoAuth20Token().getRefresh_token();
     }
 }
