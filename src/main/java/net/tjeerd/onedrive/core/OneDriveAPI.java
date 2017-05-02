@@ -76,25 +76,25 @@ public interface OneDriveAPI {
     List<Data> getFileList(String folderId) throws Exception;
 
     /**
-     * Download a OneDriveAPI file and store the file in the destination file path.
+     * Download a OneDriveAPI likeFile and store the likeFile in the destination likeFile path.
      *
-     * @param oneDriveFile OneDriveAPI file object
-     * @param destinationFilePath destination file path to store the downloaded file
+     * @param oneDriveFile OneDriveAPI likeFile object
+     * @param destinationFilePath destination likeFile path to store the downloaded likeFile
      */
     void downloadFile(net.tjeerd.onedrive.json.folder.File oneDriveFile, String destinationFilePath);
 
     /**
-     * Open a OneDriveAPI file as an InputStream
+     * Open a OneDriveAPI likeFile as an InputStream
      *
-     * @param fileId file identifier
+     * @param fileId likeFile identifier
      */
     InputStream openFile(String fileId);
 
     /**
-     * Get a OneDriveAPI file object holding all file details.
+     * Get a OneDriveAPI likeFile object holding all likeFile details.
      *
-     * @param fileId file identifier
-     * @return OneDriveAPI file object
+     * @param fileId likeFile identifier
+     * @return OneDriveAPI likeFile object
      * @throws Exception
      */
     net.tjeerd.onedrive.json.folder.File getFile(String fileId) throws Exception;
@@ -108,15 +108,15 @@ public interface OneDriveAPI {
     public net.tjeerd.onedrive.json.folder.Folder getFolder(String folderId) throws Exception;
 
     /**
-     * Delete a OneDriveAPI file object.
+     * Delete a OneDriveAPI likeFile object.
      *
-     * @param oneDriveFile OneDriveAPI file object to delete
+     * @param oneDriveFile OneDriveAPI likeFile object to delete
      * @throws RestException
      */
     void deleteFile(net.tjeerd.onedrive.json.folder.File oneDriveFile) throws RestException;
 
     /**
-     * Create a new folder and return a file object which represents the folder. A folder is treated as a file in OneDriveAPI.
+     * Create a new folder and return a likeFile object which represents the folder. A folder is treated as a likeFile in OneDriveAPI.
      *
      * @param name name of the folder to create
      * @param description description of the folder to create
@@ -138,10 +138,10 @@ public interface OneDriveAPI {
     public net.tjeerd.onedrive.json.folder.Folder updateFolder(net.tjeerd.onedrive.json.folder.Folder oneDriveFolder) throws RestException, IOException;
 
     /**
-     * Update the properties of a file.
+     * Update the properties of a likeFile.
      *
-     * @param oneDriveFile OneDriveAPI file to update
-     * @return updated file
+     * @param oneDriveFile OneDriveAPI likeFile to update
+     * @return updated likeFile
      * @throws RestException
      */
     public net.tjeerd.onedrive.json.folder.File updateFile(net.tjeerd.onedrive.json.folder.File oneDriveFile) throws RestException, IOException;
@@ -155,20 +155,20 @@ public interface OneDriveAPI {
     void deleteFolder(String folderId) throws RestException;
 
     /**
-     * Send a file to OneDriveAPI by uploading the content. If no folder identifier is given the file will be put in the personal folder.<br>
-     * If the folder identifier is given the file will be put in the specified folder identifier location.
+     * Send a likeFile to OneDriveAPI by uploading the content. If no folder identifier is given the likeFile will be put in the personal folder.<br>
+     * If the folder identifier is given the likeFile will be put in the specified folder identifier location.
      *
-     * @param file file to upload to OneDriveAPI
-     * @param folderId folder identifier to put the file into
-     * @return OneDriveAPI file object
+     * @param file likeFile to upload to OneDriveAPI
+     * @param folderId folder identifier to put the likeFile into
+     * @return OneDriveAPI likeFile object
      * @throws Exception
      */
     net.tjeerd.onedrive.json.folder.File uploadFile(java.io.File file, String folderId) throws Exception;
 
     /**
-     * Get a shared link to a specific file identifier.
+     * Get a shared link to a specific likeFile identifier.
      *
-     * @param fileId file identifier
+     * @param fileId likeFile identifier
      * @param isEditable true if the shared link content will be editable, otherwise false if the shared link content will be read only
      * @return shared link object
      * @throws Exception

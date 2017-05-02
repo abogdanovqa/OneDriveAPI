@@ -37,7 +37,7 @@ public class OneDriveTest {
         properties.load(inputStream);
 
         if (inputStream == null) {
-            throw new FileNotFoundException("OneDriveAPI properties file '" + ONEDRIVE_PROPERTIESFILE+ "' not found in the classpath");
+            throw new FileNotFoundException("OneDriveAPI properties likeFile '" + ONEDRIVE_PROPERTIESFILE+ "' not found in the classpath");
         }
 
 

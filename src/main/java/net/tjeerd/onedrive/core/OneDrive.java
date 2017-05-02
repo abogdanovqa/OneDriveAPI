@@ -221,19 +221,19 @@ public class OneDrive implements OneDriveAPI {
                 clientResponse = oneDriveCore.doGetAPI(clientResponse.getLocation().toString(), MediaType.APPLICATION_OCTET_STREAM);
                 java.io.File resultFile = clientResponse.getEntity(java.io.File.class);
                 org.apache.commons.io.FileUtils.moveFile(resultFile, destinationFile);
-                logger.info("OneDriveAPI file '" + oneDriveFile.getName() + "' saved to '" + destinationFilePath + "' (" + destinationFile.length() + " bytes)");
+                logger.info("OneDriveAPI likeFile '" + oneDriveFile.getName() + "' saved to '" + destinationFilePath + "' (" + destinationFile.length() + " bytes)");
             } catch (Exception exception) {
                 logger.error("Could not download from redirect location " + clientResponse.getLocation());
                 exception.printStackTrace();
             }
         } else if (clientResponse.getStatus() == ClientResponse.Status.OK.getStatusCode()) {
-            /* The response contains the location, so save the response to a file */
+            /* The response contains the location, so save the response to a likeFile */
             try {
                 java.io.File resultFile = clientResponse.getEntity(java.io.File.class);
                 org.apache.commons.io.FileUtils.moveFile(resultFile, destinationFile);
-                logger.info("OneDriveAPI file '" + oneDriveFile.getName() + "' saved to '" + destinationFilePath + "' (" + destinationFile.length() + " bytes)");
+                logger.info("OneDriveAPI likeFile '" + oneDriveFile.getName() + "' saved to '" + destinationFilePath + "' (" + destinationFile.length() + " bytes)");
             } catch (Exception e) {
-                logger.error("Cannot download or write file with identifier '" + oneDriveFile.getId() + "' to destination '" + destinationFilePath + "'");
+                logger.error("Cannot download or write likeFile with identifier '" + oneDriveFile.getId() + "' to destination '" + destinationFilePath + "'");
                 e.printStackTrace();
             }
         }
@@ -255,23 +255,23 @@ public class OneDrive implements OneDriveAPI {
                 );
                 return clientResponse.getEntity(InputStream.class);
             } catch (Exception e) {
-                logger.error("Could not open file from redirect location " + clientResponse.getLocation());
+                logger.error("Could not open likeFile from redirect location " + clientResponse.getLocation());
                 e.printStackTrace();
             }
         } else if (clientResponse.getStatus() == ClientResponse.Status.OK.getStatusCode()) {
-            /* The response contains the location, so save the response to a file */
+            /* The response contains the location, so save the response to a likeFile */
             try {
                 return clientResponse.getEntity(InputStream.class);
             } catch (Exception e) {
-                logger.error("Cannot open file with identifier '" + fileId + "'");
+                logger.error("Cannot open likeFile with identifier '" + fileId + "'");
                 e.printStackTrace();
             }
         } else if (clientResponse.getStatus() == ClientResponse.Status.UNAUTHORIZED.getStatusCode()){
-            /* Update access token and try open file again */
+            /* Update access token and try open likeFile again */
             initAccessTokenByRefreshTokenAndClientId();
             return openFile(fileId);
         }
-        throw new RuntimeException("Cannot download file with identifier '" + fileId + "'");
+        throw new RuntimeException("Cannot download likeFile with identifier '" + fileId + "'");
     }
 
     /**
@@ -343,12 +343,12 @@ public class OneDrive implements OneDriveAPI {
     }
 
     /**
-     * Send a file to OneDriveAPI by uploading the content. If no folder identifier is given the file will be put in the personal folder.<br>
-     * If the folder identifier is given the file will be put in the specified folder identifier location.
+     * Send a likeFile to OneDriveAPI by uploading the content. If no folder identifier is given the likeFile will be put in the personal folder.<br>
+     * If the folder identifier is given the likeFile will be put in the specified folder identifier location.
      *
-     * @param file file to upload to OneDriveAPI
-     * @param folderId folder identifier to put the file into
-     * @return OneDriveAPI file object
+     * @param file likeFile to upload to OneDriveAPI
+     * @param folderId folder identifier to put the likeFile into
+     * @return OneDriveAPI likeFile object
      */
     public net.tjeerd.onedrive.json.folder.File uploadFile(File file, String folderId) {
         net.tjeerd.onedrive.json.folder.File oneDriveFile = new net.tjeerd.onedrive.json.folder.File();
@@ -369,7 +369,7 @@ public class OneDrive implements OneDriveAPI {
             ClientResponse clientResponse = webResource.queryParams(queryParams).type(MediaType.APPLICATION_JSON).put(ClientResponse.class, fileToByteArray(file));
             oneDriveFile = objectMapper.readValue(clientResponse.getEntity(String.class).toString(), net.tjeerd.onedrive.json.folder.File.class);
         } catch (Exception e) {
-            logger.error("Cannot upload file '" + file.getAbsolutePath() + "' to OneDriveAPI");
+            logger.error("Cannot upload likeFile '" + file.getAbsolutePath() + "' to OneDriveAPI");
             e.printStackTrace();
         }
 
@@ -377,10 +377,10 @@ public class OneDrive implements OneDriveAPI {
     }
 
     /**
-     * Convert file content to a byte array.
+     * Convert likeFile content to a byte array.
      *
-     * @param file file object to convert to a byte array
-     * @return byte array holding the file content
+     * @param file likeFile object to convert to a byte array
+     * @return byte array holding the likeFile content
      */
     private byte[] fileToByteArray(java.io.File file) {
         byte[] byteArrayFile = new byte[(int) file.length()];

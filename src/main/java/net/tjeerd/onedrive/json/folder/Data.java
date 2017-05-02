@@ -1,11 +1,13 @@
 package net.tjeerd.onedrive.json.folder;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Data  {
     private String     client_updated_time;
     private Number     comments_count;
@@ -384,7 +386,7 @@ public class Data  {
     private <T extends Data> T convertTo(Class<T> clazz) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String json = objectMapper.writerWithType(Data.class).writeValueAsString(this);
+            String json = objectMapper.writeValueAsString(this);
             T f = objectMapper.readValue(json, clazz);
             return f;
         } catch (Exception e) {
@@ -392,21 +394,25 @@ public class Data  {
         }
     }
 
+    @JsonIgnore
     public Data convertToCorrespondingType() {
-        if (isFile()) {
+        if (likeFile()) {
             return convertTo(net.tjeerd.onedrive.json.folder.File.class);
-        } else if (isFolder()) {
+        } else if (likeFolder()) {
             return convertTo(Folder.class);
         } else {
-            throw new IllegalStateException(type + "is unexpected type of the object");
+            //throw new IllegalStateException(type + "is unexpected type of the object");
+            return this;
         }
     }
 
-    public boolean isFile() {
-        return type.equals("file");
+    @JsonIgnore
+    public boolean likeFile() {
+        return type.equals("likeFile");
     }
 
-    public boolean isFolder() {
+    @JsonIgnore
+    public boolean likeFolder() {
         return type.equals("folder");
     }
 }
